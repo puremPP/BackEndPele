@@ -1,0 +1,26 @@
+@startuml Manage Booking (GET)
+
+header Hotel Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Booking (getOne)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:bookings" as routerBookings
+participant "<<middleware>>\n:auth" as middleware
+participant "<<controllers>>\n:bookings" as controllerBookings
+participant "<<model>>\n:Booking" as modelBooking
+database "<<MongoDB>>\n:Bookings" as BookingDatabase
+
+client-> server ++:req.get('/bookings/:id')
+server->routerBookings ++:app.use('/bookings',bookings)
+routerBookings -> middleware ++: protect()
+middleware -> controllerBookings ++:getBooking()
+controllerBookings->modelBooking ++:findById(req.params.id).populate({path: 'hotel',select : 'name address tel'});
+modelBooking ->BookingDatabase ++: BookingSchema
+BookingDatabase --> modelBooking --: booking
+controllerBookings <-- modelBooking --:booking
+controllerBookings->client --:response
+
+@enduml
+

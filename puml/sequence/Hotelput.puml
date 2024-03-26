@@ -1,0 +1,28 @@
+@startuml Manage Hotel (Put)
+
+header Project Pele Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Hotel (Put)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:hotels" as routerHotels
+participant "<<middleware>>\n:auth" as middleware
+participant "<<controllers>>\n:hotels" as controllersHotels
+participant "<<model>>\n:Hotel" as modelHotel
+database "<<MongoDB>>\n:hotels" as HotelsDatabase
+
+client->server ++:req.put('/hotels/:id')
+server->routerHotels ++:app.use('/hotels/:id',hotels)
+routerHotels -> middleware ++: protect(), authorize('admin')
+middleware -> controllersHotels ++:updateHotel()
+controllersHotels->modelHotel ++:findByIdAndUpdate(req.params,req.body) 
+modelHotel ->HotelsDatabase ++: HotelSchema
+HotelsDatabase --> modelHotel --: updatedHotel
+controllersHotels <-- modelHotel --:updatedHotel
+controllersHotels->client --:response
+
+@enduml
+
+
+

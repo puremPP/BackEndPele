@@ -1,0 +1,25 @@
+@startuml Manage Hotel (Delete)
+
+header Hotel Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Hotel (Delete)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:hotels" as routerHotels
+participant "<<middleware>>\n:auth" as middleware
+participant "<<controllers>>\n:hotels" as controllersHotels
+participant "<<model>>\n:Hotel" as modelHotel
+database "<<MongoDB>>\n:hotels" as HotelsDatabase
+
+client-> server ++:req.delete('/hotels/:id')
+server->routerHotels ++:app.use('/hotels',hotels)
+routerHotels -> middleware ++: protect(), authorize('admin')
+middleware -> controllersHotels ++:deleteHotel()
+controllersHotels->modelHotel ++: findById(req.params.id), deleteOne()
+modelHotel ->HotelsDatabase ++: HotelSchema
+HotelsDatabase --> modelHotel --: hotel
+controllersHotels <-- modelHotel --:hotel
+controllersHotels->client --:response
+
+@enduml

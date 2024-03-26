@@ -1,0 +1,25 @@
+@startuml Manage Hotel (getOne)
+
+header Project Pele Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Hotel (getOne)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:hotels" as routerHotels
+participant "<<controllers>>\n:hotels" as controllersHotels
+participant "<<model>>\n:Hotel" as modelHotel
+database "<<MongoDB>>\n:hotels" as HotelsDatabase
+
+client->server ++:req.get('/hotels/:id')
+server->routerHotels ++:app.use('/hotels/:id',hotels)
+routerHotels -> controllersHotels ++:getHotel()
+controllersHotels->modelHotel ++:findById(req.params.id) 
+modelHotel ->HotelsDatabase ++: HotelSchema.findById(id)
+HotelsDatabase --> modelHotel --: Hotel
+controllersHotels <-- modelHotel --:Hotel
+controllersHotels->client --:response
+
+@enduml
+
+

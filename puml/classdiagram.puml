@@ -1,0 +1,76 @@
+@startuml classDiagram
+
+class HotelBooking<<Appilcation>>
+
+class Hotel.hotels<<Resource>>{
+   <<GET>> +getHotels() :Hotel
+   <<POST>> +createHotel() :Hotel
+}
+class Hotel.hotel<<Resource>>{
+    <<GET>> +getHotel() :Hotel
+    <<PUT>> +updateHotel() :Hotel
+    <<DELETE>> +deleteHotel() :void
+}
+class Hotel.Hotel<<Representation>>{
+    -name
+    -address
+    -tel
+}
+
+class auth<<Resource>> {
+}
+class User.login<<Resource>>{
+    <<POST>> +login() :TOKEN
+}
+class User.logout<<Resource>>{
+    <<GET>> +logout() :void
+}
+class User.me<<Resource>>{
+    <<GET>> +getMe() :User
+}
+class User.register<<Resource>>{
+    <<POST>> +register() :TOKEN
+}
+class Booking.bookings<<Resource>>{
+    <<GET>> +getBookings() :Booking
+    <<POST>> +addBooking() :Booking
+}
+class Booking.booking<<Resource>>{
+    <<GET>> +getBooking() :Booking
+    <<PUT>> +updateBooking() :Booking
+    <<DELETE>> +deleteBooking() :void
+}
+
+class User.User<<Representation>> {
+    -name
+    -tel
+    -email
+    -password
+    -role
+    -createdAt
+}
+
+class Booking.Booking<<Representation>> {
+    -startDate
+    -endDate
+    -user
+    -hotel
+    -createdAt
+}
+
+HotelBooking ..> auth : /auth <<Path>>
+auth ..> User.login : /login <<Path>>
+auth ..> User.logout: /logout <<Path>>
+auth ..> User.me : /me <<Path>>
+auth ..> User.register : /register <<Path>>
+User.login ..> User.User : <<use>> 
+User.logout ..> User.User : <<use>> 
+User.me ..> User.User : <<use>> 
+User.register ..> User.User : <<use>> 
+HotelBooking ..> Hotel.hotels : /hotels <<Path>>
+Hotel.hotels  ..> Hotel.hotel : /{hotelId} <<Path>>
+Hotel.hotel ..> Hotel.Hotel : <<use>>
+HotelBooking ..> Booking.bookings : /bookings <<Path>>
+Booking.bookings ..> Booking.booking : /{bookingId} <<Path>>
+Booking.booking ..> Booking.Booking : <<use>>
+@enduml

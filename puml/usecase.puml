@@ -1,0 +1,63 @@
+@startuml Project Pele Use Case DiagramBorderColor
+left to right direction
+skinparam actorStyle awesome 
+
+
+package Authentication{
+    usecase "Register" as register
+    usecase "Login" as login
+    usecase "Get Me" as getme
+    usecase "logout" as logout
+}
+package BookingManagement as "Hotel system"{
+ 
+    usecase "View\nHotels" as viewHotel
+    usecase "Manage\nBooking" as manageBooking
+    usecase "Manage\nHotels" as manageHotel
+}
+package hotel as "Hotel Management"{
+    usecase "Get all Hotel" as getallHotel
+    usecase "Get a Hotel" as getsingleHotel
+    usecase "create Hotel" as createHotel
+    usecase "update Hotel" as updateHotel
+    usecase "delete Hotel" as deleteHotel
+}
+
+actor "User" as user    
+actor "Admin" as admin
+
+
+user --> register
+user --> login
+user -->logout
+user-->getme
+user --> viewHotel
+user --> manageBooking
+user-->getallHotel
+user--> getsingleHotel
+
+
+register <-- admin
+login <-- admin
+logout <-- admin
+getme <-- admin
+manageBooking <-- admin
+manageHotel <-- admin
+getallHotel <-- admin
+getsingleHotel <-- admin
+createHotel <-- admin
+updateHotel <-- admin
+deleteHotel <-- admin
+
+
+
+actor "visitor" as visitor
+
+visitor --> register
+visitor --> viewHotel
+visitor --> getallHotel
+visitor --> getsingleHotel
+
+
+
+
